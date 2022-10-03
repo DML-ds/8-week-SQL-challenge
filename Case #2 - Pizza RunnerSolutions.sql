@@ -37,4 +37,22 @@ WHERE
 	distance != 0
 GROUP BY 
 	p.pizza_name;
+	
+	
+--5. How many Vegetarian and Meatlovers were ordered by each customer?
+SELECT
+	c.customer_id,
+	p.pizza_name,
+	count(p.pizza_name) AS num_pizza_ordered
+FROM
+	customers_orders_temp as c JOIN pizza_names as p
+	ON c.pizza_id = p.pizza_id
+GROUP BY
+	c.customer_id,
+	p.Pizza_name
+ORDER BY
+	c.customer_id;
+	
+	
+
 
