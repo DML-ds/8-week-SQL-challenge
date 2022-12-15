@@ -82,5 +82,30 @@ WHERE
 	AND rank_count = 2;
   
   
- --6.
+ --6. What is the number and percentage of customer plans after their initial free trial?
+WITH plan_lead_cte as(
+	SELECT
+		customer_id,
+		plan_id,
+		LEAD(plan_id, 1) OVER(PARTITION BY customer_id ORDER BY plan_id) as plan_lead
+	FROM
+		subscriptions
+)
+SELECT
+	plan_lead,
+	COUNT(*) AS plan_lead_count,
+	ROUND(100 * COUNT(*)::NUMERIC/(
+		SELECT
+			COUNT(DISTINCT customer_id)
+		FROM
+			subscriptions), 1) as percentage
+FROM
+	plan_lead_cte
+WHERE
+	plan_lead IS NOT NULL
+	AND plan_id = 0
+GROUP BY
+	plan_lead
+ORDER BY
+	plan_lead;
 
